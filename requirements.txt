@@ -1,0 +1,28 @@
+# Deep LSTM Storm Surge Forecasting - Python dependencies
+# Tested with Python 3.10+
+#
+# Core scientific stack
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+xarray>=2023.6
+
+# ML
+scikit-learn>=1.3
+tensorflow-cpu>=2.13            # set TF_ENABLE_ONEDNN_OPTS=0 for bit-reproducibility
+
+# Plotting
+matplotlib>=3.7
+seaborn>=0.12
+plotly>=5.15
+
+# API / UI
+fastapi>=0.100
+streamlit>=1.30
+
+# Utilities
+pyyaml>=6.0
+requests>=2.31
+tqdm>=4.65
+joblib>=1.3
+pyarrow>=14.0

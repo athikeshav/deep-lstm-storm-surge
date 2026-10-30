@@ -1,0 +1,99 @@
+{
+  "water_level@8518750": {
+    "product": "water_level",
+    "station_id": "8518750",
+    "raw_rows": 197549,
+    "valid_rows": 197549,
+    "duplicates": 0,
+    "missing_values": 0,
+    "out_of_bounds": 0,
+    "flagged_quality": 0,
+    "time_gaps": 28,
+    "min_time": "2021-09-01 00:00:00+00:00",
+    "max_time": "2023-12-31 00:00:00+00:00",
+    "renamed_to": [
+      "water_level_m"
+    ]
+  },
+  "predictions@8518750": {
+    "product": "predictions",
+    "station_id": "8518750",
+    "raw_rows": 203763,
+    "valid_rows": 203763,
+    "duplicates": 0,
+    "missing_values": 0,
+    "out_of_bounds": 0,
+    "flagged_quality": 0,
+    "time_gaps": 2,
+    "min_time": "2021-09-01 00:00:00+00:00",
+    "max_time": "2023-12-31 00:00:00+00:00",
+    "renamed_to": [
+      "predicted_tide_m"
+    ]
+  },
+  "wind@8516945": {
+    "product": "wind",
+    "station_id": "8516945",
+    "raw_rows": 197549,
+    "valid_rows": 197549,
+    "duplicates": 0,
+    "missing_values": 1172,
+    "out_of_bounds": 0,
+    "flagged_quality": 0,
+    "time_gaps": 28,
+    "min_time": "2021-09-01 00:00:00+00:00",
+    "max_time": "2023-12-31 00:00:00+00:00",
+    "renamed_to": [
+      "wind_speed_ms",
+      "wind_direction_deg"
+    ]
+  },
+  "air_pressure@8518750": {
+    "product": "air_pressure",
+    "station_id": "8518750",
+    "raw_rows": 197549,
+    "valid_rows": 197549,
+    "duplicates": 0,
+    "missing_values": 260,
+    "out_of_bounds": 0,
+    "flagged_quality": 0,
+    "time_gaps": 28,
+    "min_time": "2021-09-01 00:00:00+00:00",
+    "max_time": "2023-12-31 00:00:00+00:00",
+    "renamed_to": [
+      "air_pressure_hpa"
+    ]
+  },
+  "air_temperature@8518750": {
+    "product": "air_temperature",
+    "station_id": "8518750",
+    "raw_rows": 197549,
+    "valid_rows": 197549,
+    "duplicates": 0,
+    "missing_values": 257,
+    "out_of_bounds": 0,
+    "flagged_quality": 0,
+    "time_gaps": 28,
+    "min_time": "2021-09-01 00:00:00+00:00",
+    "max_time": "2023-12-31 00:00:00+00:00",
+    "renamed_to": [
+      "air_temperature_c"
+    ]
+  },
+  "water_temperature@8518750": {
+    "product": "water_temperature",
+    "station_id": "8518750",
+    "raw_rows": 197549,
+    "valid_rows": 197549,
+    "duplicates": 0,
+    "missing_values": 258,
+    "out_of_bounds": 0,
+    "flagged_quality": 0,
+    "time_gaps": 28,
+    "min_time": "2021-09-01 00:00:00+00:00",
+    "max_time": "2023-12-31 00:00:00+00:00",
+    "renamed_to": [
+      "water_temperature_c"
+    ]
+  }
+}

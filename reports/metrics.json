@@ -1,0 +1,52 @@
+{
+  "target": "storm_surge_residual",
+  "n_test_samples": 4201,
+  "test_period": [
+    "2023-07-02 02:00:00",
+    "2023-12-31 00:00:00"
+  ],
+  "lstm": {
+    "mae": 0.05413540080189705,
+    "rmse": 0.0790761187672615,
+    "bias": 0.005795710254460573,
+    "peak_mae": 0.11225491762161255,
+    "n_samples": 4201,
+    "n_peaks": 213,
+    "peak_threshold": 0.4169999957084656,
+    "coverage_80": 0.26660318971673413,
+    "coverage_95": 0.37372054272792193
+  },
+  "persistence": {
+    "mae": 0.06548664718866348,
+    "rmse": 0.09894075244665146,
+    "bias": -1.5933948816382326e-05,
+    "peak_mae": 0.10104284435510635,
+    "n_samples": 4201,
+    "n_peaks": 213,
+    "peak_threshold": 0.4169999957084656,
+    "coverage_80": null,
+    "coverage_95": null
+  },
+  "linear_regression": {
+    "mae": 0.05169852077960968,
+    "rmse": 0.07623745501041412,
+    "bias": -0.0026026656851172447,
+    "peak_mae": 0.09816224128007889,
+    "n_samples": 4201,
+    "n_peaks": 213,
+    "peak_threshold": 0.4169999957084656,
+    "coverage_80": null,
+    "coverage_95": null
+  },
+  "skill_score_vs_persistence": 0.1733368079459635,
+  "skill_score_vs_linear": -0.047136358749523266,
+  "n_peak_events": 18,
+  "peak_threshold_metres": 0.4169999957084656,
+  "plots": {
+    "timeseries": "C:\\Projects\\deep-lstm-storm-surge\\reports\\timeseries.png",
+    "scatter": "C:\\Projects\\deep-lstm-storm-surge\\reports\\scatter.png",
+    "residuals": "C:\\Projects\\deep-lstm-storm-surge\\reports\\residuals.png"
+  },
+  "predictions_path": "C:\\Projects\\deep-lstm-storm-surge\\data\\processed\\test_predictions.parquet",
+  "peak_events_path": "C:\\Projects\\deep-lstm-storm-surge\\reports\\peak_events.csv"
+}

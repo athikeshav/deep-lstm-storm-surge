@@ -1,0 +1,124 @@
+# ===========================================================================
+# Deep LSTM Storm Surge Forecasting - Central Configuration
+# Study site: The Battery, NY (NOAA CO-OPS station 8518750)
+# All paths are resolved relative to the project root by src/config.py
+# ===========================================================================
+
+project:
+  name: "Deep LSTM-Based Storm-Surge Height Forecasting Using Satellite and Ocean-Weather Telemetry"
+  short_name: "Deep LSTM Storm Surge"
+  version: "1.0.0"
+  purpose: "educational_research_prototype"
+  safety_boundary: >
+    This is an educational/research prototype, NOT an operational warning service.
+    Do not use it to make evacuation or public-safety decisions.
+
+# ---------------------------------------------------------------------------
+# Study site and target definition
+# ---------------------------------------------------------------------------
+site:
+  station_id: "8518750"
+  station_name: "The Battery, NY"
+  lat: 40.7006
+  lon: -74.0142
+  datum: "mllw"
+  timezone: "gmt"
+  units: "metric"
+
+# Target definition (CRITICAL scientific distinction)
+# Storm surge residual = observed_water_level - predicted_astronomical_tide
+# Both quantities are observed/predicted at the same datum (MLLW) and same
+# cadence; the difference removes the regular tidal cycle and isolates the
+# weather-driven abnormal rise. This is NOT total water level.
+target:
+  variable: "storm_surge_residual"
+  definition: "observed_water_level_m - predicted_astronomical_tide_m"
+  units: "metres"
+  product_obs: "water_level"
+  product_tide: "predictions"
+
+# ---------------------------------------------------------------------------
+# Predictors: only variables with reliable timestamps + plausible physical link
+# Primary station: The Battery (8518750) - water/tide/pressure/temperature
+# Supplementary: Kings Point (8516945) - wind (The Battery has no anemometer)
+# ---------------------------------------------------------------------------
+predictors:
+  - { product: "water_level",     var: "v", rename: "water_level_m",    units: "m",     source: "tide_gauge_noaa_8518750" }
+  - { product: "predictions",     var: "v", rename: "predicted_tide_m",  units: "m",     source: "noaa_tide_model_8518750" }
+  - { product: "wind",             var: "s", rename: "wind_speed_ms",     units: "m/s",   source: "anemometer_noaa_8516945", station_id: "8516945" }
+  - { product: "wind",             var: "d", rename: "wind_direction_deg",units: "deg",   source: "anemometer_noaa_8516945", station_id: "8516945" }
+  - { product: "air_pressure",     var: "v", rename: "air_pressure_hpa",  units: "hPa",   source: "barometer_noaa_8518750" }
+  - { product: "air_temperature",  var: "v", rename: "air_temperature_c", units: "degC",  source: "thermometer_noaa_8518750" }
+  - { product: "water_temperature",var: "v",      rename: "water_temperature_c",units: "degC",  source: "thermometer_noaa_8518750" }
+
+# ---------------------------------------------------------------------------
+# Time and forecasting
+# ---------------------------------------------------------------------------
+time:
+  interval_minutes: 60           # hourly cadence
+  lookback_steps: 24             # last 24 hours as input window
+  forecast_horizon_steps: 3      # predict surge 3 hours ahead
+  history_start: "2021-09-01"
+  history_end:   "2023-12-31"
+
+# NOAA API limits per request:
+#   water_level / predictions at 6-min: 31 days
+#   predictions: 10 years
+#   wind, air_pressure, air_temperature, water_temperature: 1 year
+# chunk_days is per-product (see src/data/ingest.py CHUNK_DAYS).
+# Chronological splits (NO random shuffling across time)
+splits:
+  train_start:   "2021-09-01"
+  train_end:     "2022-12-31"
+  val_start:     "2023-01-01"
+  val_end:       "2023-06-30"
+  test_start:    "2023-07-01"
+  test_end:      "2023-12-31"
+
+# ---------------------------------------------------------------------------
+# Model architecture (Deep LSTM, starting values per scope)
+# ---------------------------------------------------------------------------
+model:
+  type: "deep_lstm"
+  layers:
+    - { type: "lstm", units: 64, return_sequences: true, name: "lstm_1" }
+    - { type: "dropout", rate: 0.2 }
+    - { type: "lstm", units: 32, return_sequences: false, name: "lstm_2" }
+    - { type: "dropout", rate: 0.2 }
+    - { type: "dense", units: 16, activation: "relu" }
+    - { type: "dense", units: 1,  activation: "linear" }
+  training:
+    loss: "huber"                # robust to outliers (storm peaks)
+    optimizer: "adam"
+    learning_rate: 0.001
+    batch_size: 64
+    epochs: 40
+    early_stopping_patience: 6
+    restore_best_weights: true
+  seed: 42
+
+# ---------------------------------------------------------------------------
+# Baselines (LSTM must beat these to be useful)
+# ---------------------------------------------------------------------------
+baselines:
+  persistence:
+    description: "y_hat(t+H) = y(t)  (forecast surge equals the latest observed surge)"
+  linear_regression:
+    description: "y_hat(t+H) = w . flattened_window + b  (fit on train only)"
+    lookback_steps: 24
+
+# ---------------------------------------------------------------------------
+# Uncertainty / prediction interval
+# ---------------------------------------------------------------------------
+uncertainty:
+  method: "mc_dropout"           # Monte-Carlo dropout at inference time
+  num_samples: 30
+  interval_levels: [0.80, 0.95]
+
+# ---------------------------------------------------------------------------
+# Reproducibility
+# ---------------------------------------------------------------------------
+reproducibility:
+  random_seed: 42
+  log_level: "INFO"
+  save_versions: true            # save package versions on every run
